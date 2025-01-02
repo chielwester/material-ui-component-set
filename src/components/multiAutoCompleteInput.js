@@ -67,7 +67,18 @@
       value: valueRaw,
       variant,
       floatLabel,
+      filterFilter,
     } = options;
+    const [, setOptions] = useOptions();
+
+    const filterStructure = Object.values(filterFilter).length
+      ? Object.values(filterFilter)[0][0]
+      : null;
+
+    useEffect(() => {
+      setOptions({ filterStructure });
+    }, []);
+
     const numberPropTypes = ['serial', 'minutes', 'count', 'integer'];
     /*
      * To understand this component it is important to know what the following options are used for:
@@ -743,7 +754,10 @@
           triggerEventValue = value || '';
         }
 
-        changeContext.current = { modelData: value };
+        changeContext.current = {
+          modelData: value,
+          filterStructure: filterStructure,
+        };
         B.triggerEvent('onChange', triggerEventValue, changeContext.current);
       }
     }, [value]);

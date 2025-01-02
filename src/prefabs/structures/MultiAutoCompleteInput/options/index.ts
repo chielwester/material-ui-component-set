@@ -7,6 +7,9 @@ import {
   showIf,
   toggle,
   variable,
+  text,
+  model,
+  filter,
 } from '@betty-blocks/component-sdk';
 
 import { advanced } from './advanced';
@@ -41,6 +44,14 @@ export const options = {
     configuration: {
       allowRelations: true,
     },
+  }),
+  filterStructure: text('Filter Structure', {
+    value: '',
+    configuration: { condition: showIf('filterStructure', 'EQ', 'never') },
+  }),
+  filterModel: model('Filter Model', { value: '' }),
+  filterFilter: filter('Filter Structure', {
+    configuration: { dependsOn: 'filterModel' },
   }),
   optionType: buttongroup(
     'Option type',

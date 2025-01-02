@@ -191,10 +191,12 @@
 
     /**
      * @name Filter
+     * @param {String} filterstructure
      * @param {Property} property
      * @returns {Void}
      */
-    B.defineFunction('Filter', ({ event, property, interactionId }) => {
+    B.defineFunction('Filter', (opts) => {
+      const { event, property, filterstructure, interactionId } = opts;
       if (event === undefined || event === null) {
         // eslint-disable-next-line no-console
         console.error(
@@ -202,13 +204,27 @@
         );
         return;
       }
-      setInteractionFilter({
-        ...interactionFilter,
-        [interactionId]: {
-          property,
-          value: event.target ? event.target.value : transformValue(event),
-        },
-      });
+
+      if (filterstructure) {
+        setInteractionFilter({
+          ...interactionFilter,
+          [interactionId]: {
+            type: 'habtm',
+            property,
+            filterstructure,
+            value: event.target ? event.target.value : transformValue(event),
+          },
+        });
+      } else {
+        setInteractionFilter({
+          ...interactionFilter,
+          [interactionId]: {
+            type: 'basic',
+            property,
+            value: event.target ? event.target.value : transformValue(event),
+          },
+        });
+      }
       setInteractionSearchTerm(
         event.target ? event.target.value : transformValue(event),
       );
@@ -225,12 +241,27 @@
 
     let interactionFilters = {};
 
+    const mutateObjectProperty = (prop, value, obj) =>
+      obj.constructor === Object &&
+      Object.keys(obj).forEach((key) => {
+        if (key === prop) obj[key] = value;
+        mutateObjectProperty(prop, value, obj[key]);
+      });
+
     const isEmptyValue = (value) =>
       !value || (Array.isArray(value) && value.length === 0);
     const clauses = Object.entries(interactionFilter)
       .filter(([, { value }]) => !isEmptyValue(value))
-      .map(([, { property, value }]) =>
-        property.id.reduceRight((acc, field, index, arr) => {
+      .map(([, { property, value, filterstructure, type }]) => {
+        if (type === 'habtm') {
+          mutateObjectProperty('in', value, filterstructure);
+
+          return filterstructure;
+        }
+
+        return property.id.reduceRight((acc, field, index, arr) => {
+          const prop = getProperty(property.id);
+
           const isLast = index === arr.length - 1;
           if (isLast) {
             if (Array.isArray(value)) {
@@ -239,7 +270,12 @@
                   arr.reduceRight((accq, fieldf, i, a) => {
                     const issLast = i === a.length - 1;
                     if (issLast) {
-                      return { [fieldf]: { [property.operator]: d } };
+                      return {
+                        [fieldf]: {
+                          [property.operator]:
+                            prop.kind === 'string' ? d.toString() : d,
+                        },
+                      };
                     }
                     return { [fieldf]: accq };
                   }, {}),
@@ -253,8 +289,8 @@
             return acc;
           }
           return { [field]: acc };
-        }, {}),
-      );
+        }, {});
+      });
     interactionFilters =
       clauses.length > 1 ? { _and: clauses } : clauses[0] || {};
 

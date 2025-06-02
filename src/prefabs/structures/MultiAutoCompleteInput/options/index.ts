@@ -61,17 +61,11 @@ export const options = {
       ['Variable', 'variable'],
     ],
     {
-      value: 'variable',
-      configuration: {
-        condition: showIf('optionType', 'EQ', 'never'),
-      },
+      value: 'model',
     },
   ),
   model: modelAndRelation('Model', {
     value: '',
-    configuration: {
-      condition: showIf('optionType', 'EQ', 'variable'),
-    },
   }),
   filter: option('FILTER', {
     label: 'Filter for options',

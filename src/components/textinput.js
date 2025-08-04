@@ -224,6 +224,10 @@
     B.defineFunction('Disable', () => setIsDisabled(true));
     B.defineFunction('Reset', () => setCurrentValue(useText(value)));
     B.defineFunction('Focus', () => focusHandler());
+    B.defineFunction('TriggerChange', () =>
+      B.triggerEvent('onChange', currentValue),
+    );
+    B.defineFunction('SetValue', (evt) => setCurrentValue(evt));
 
     const handleClickShowPassword = () => {
       togglePassword(!showPassword);

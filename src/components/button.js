@@ -19,6 +19,7 @@
       visible,
       actionId,
       buttonText,
+      buttonValue,
       actionModels,
       addTooltip,
       hasVisibleTooltip,
@@ -44,6 +45,7 @@
       linkTo && linkTo.id !== '' && useEndpoint(linkTo);
     const hasInteralLink = linkType === 'internal' && linkTo && linkTo.id;
     const buttonContent = useText(buttonText);
+    const buttonValueContent = useText(buttonValue);
     const tooltipText = useText(tooltipContent);
     const [isVisible, setIsVisible] = useState(visible);
     const [isLoading, setIsLoading] = useState(false);
@@ -192,13 +194,13 @@
 
     const handleClick = (e) => {
       e.stopPropagation();
-      B.triggerEvent('onClick');
+      B.triggerEvent('onClick', buttonValueContent);
     };
 
     const handleKeyUp = (e) => {
       if (e.key === 'Enter') {
         e.stopPropagation();
-        B.triggerEvent('onClick');
+        B.triggerEvent('onClick', buttonValueContent);
       }
     };
 

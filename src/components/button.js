@@ -20,6 +20,7 @@
       actionId,
       buttonText,
       buttonValue,
+      valueAsBoolean,
       actionModels,
       addTooltip,
       hasVisibleTooltip,
@@ -45,7 +46,10 @@
       linkTo && linkTo.id !== '' && useEndpoint(linkTo);
     const hasInteralLink = linkType === 'internal' && linkTo && linkTo.id;
     const buttonContent = useText(buttonText);
-    const buttonValueContent = useText(buttonValue);
+    const parsedButtonValue = useText(buttonValue);
+    const buttonValueContent = valueAsBoolean
+      ? parsedButtonValue === 'true'
+      : parsedButtonValue;
     const tooltipText = useText(tooltipContent);
     const [isVisible, setIsVisible] = useState(visible);
     const [isLoading, setIsLoading] = useState(false);

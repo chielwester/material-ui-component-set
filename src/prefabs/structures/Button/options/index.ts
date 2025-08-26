@@ -38,6 +38,7 @@ export const buttonOptions = {
   }),
   buttonText: variable('Button text', { value: ['Button'] }),
   buttonValue: variable('Button Value', { value: [''] }),
+  valueAsBoolean: toggle('Handle value as boolean', { value: false }),
   fullWidth: toggle('Full width', { value: false }),
   icon: icon('Icon', { value: 'None' }),
   size: option('CUSTOM', {

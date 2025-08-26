@@ -390,7 +390,6 @@
               return;
             }
             setInteractionFilter((s) => ({
-              ...s,
               [interactionId]: {
                 property,
                 value: event.target

@@ -154,6 +154,7 @@
       tabIndex: isDev ? -1 : undefined,
       onClick: (event) => {
         event.stopPropagation();
+        B.triggerEvent('onClick');
         actionCallback();
       },
       role: 'button',

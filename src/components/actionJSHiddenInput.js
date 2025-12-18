@@ -4,10 +4,27 @@
   allowedTypes: [],
   orientation: 'HORIZONTAL',
   jsx: (() => {
-    const { actionVariableId: name, value: valueRaw } = options;
+    const {
+      actionVariableId: name,
+      value: valueRaw,
+      useBrowserLanguage,
+    } = options;
     const { env, useText } = B;
     const isDev = env === 'dev';
-    const valueText = useText(valueRaw);
+
+    const getLanguage = () => {
+      const name = 'BBLocale';
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+
+      let locale = navigator.language || navigator.userLanguage || 'en';
+      if (parts.length === 2) {
+        locale = parts.pop().split(';').shift();
+      }
+      return locale.substring(0, 2).toLowerCase();
+    };
+
+    const valueText = useBrowserLanguage ? getLanguage() : useText(valueRaw);
     const [value, setValue] = useState(valueText);
 
     useEffect(() => {

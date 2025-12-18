@@ -1,5 +1,6 @@
 import {
   prefab,
+  toggle,
   component,
   variable,
   Icon,
@@ -45,6 +46,9 @@ const options = {
     configuration: {
       allowFormatting: false,
     },
+  }),
+  useBrowserLanguage: toggle('Use browser language', {
+    value: false,
   }),
 };
 

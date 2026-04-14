@@ -3,7 +3,7 @@
   type: 'CONTENT_COMPONENT',
   allowedTypes: [],
   orientation: 'VERTICAL',
-  styleType: 'BUTTON',
+  // styleType: 'BUTTON',
   jsx: (() => {
     const { CircularProgress, Tooltip } = window.MaterialUI.Core;
     const {
@@ -165,7 +165,10 @@
 
     const ButtonContent = (
       <div
-        className={[classes.root, disabled ? classes.disabled : ''].join(' ')}
+        className={[
+          includeStyling(classes.root),
+          disabled ? classes.disabled : '',
+        ].join(' ')}
       >
         <span className={classes.innerRoot}>
           &#8203;
@@ -425,7 +428,7 @@
         },
       },
       root: ({ style }) => ({
-        ...style,
+        // ...style,
         boxSizing: 'border-box',
         display: 'flex',
         width: '100%',
